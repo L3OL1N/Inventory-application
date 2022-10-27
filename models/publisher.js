@@ -9,11 +9,17 @@ const PublisherSchema = new Schema({
   website:{ type: String }
 });
 
-// Virtual for author's URL
+// Virtual for publisher's URL
 PublisherSchema.virtual("url").get(function () {
   // We don't use an arrow function as we'll need the this object
-  return `/catalog/author/${this._id}`;
+  return `/catalog/publisher/${this._id}`;
 });
 
+// Virtual for publisher's date
+PublisherSchema.virtual("founded_date").get(function () {
+  // We don't use an arrow function as we'll need the this object
+  return this.founded?
+  DateTime.fromJSDate(this.founded).toLocaleString(DateTime.DATE_MED):"";
+});
 // Export model
 module.exports = mongoose.model("Publisher", PublisherSchema);

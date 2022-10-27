@@ -11,7 +11,8 @@ use('Game');
 
 
 // Run a find command to view items sold on April 4th, 2014.
-db.games.find({},{name:1,summary:1});
+db.publishers.find()
+    .sort([["name", "ascending"]])
 
 // Build an aggregation to view total sales for each product in 2014.
 const aggregation = [
