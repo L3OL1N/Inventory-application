@@ -1,0 +1,7 @@
+extends layout
+
+block content
+  h1= title
+  ul
+    for game in game_list
+      li=game.name + game.summary
