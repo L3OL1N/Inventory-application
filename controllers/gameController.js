@@ -1,11 +1,11 @@
-var Game = require('../models/game');
+const Game = require('../models/game');
 
 const { body, validationResult } = require("express-validator");
 
 var async = require('async');
 
 //Display list of all game
-exports.game_list = function(req, res) {
+exports.game_list = function(req, res, next) {
     Game.find({},"name summary")
         .sort({name:1})
         .exec(function (err, list_games) {
