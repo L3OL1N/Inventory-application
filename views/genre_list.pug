@@ -1,0 +1,7 @@
+extends layout
+
+block content
+  h1= title
+  ul
+    for genre in genre_list
+      li=genre.name 
