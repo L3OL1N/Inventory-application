@@ -1,8 +1,23 @@
+p,a,li{
+  font-size: 18px;
+}
 body {
   padding: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  display: flex;
 }
-
+body>#sideNav{
+  flex: 0.2;
+  margin-top: 10px;
+}
+body>main{
+  flex: 0.8;
+  display: block;
+  margin-left: 50px;
+}
+h1{
+  margin-top: 10px;
+}
 a {
   color: #00B7FF;
 }

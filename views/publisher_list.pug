@@ -4,4 +4,5 @@ block content
   h1= title
   ul
     for publisher in publisher_list
-      li=publisher.name + " : " + publisher.founded_date + " " + publisher.website
+      li=publisher.name + " : " + publisher.founded_date + " " 
+        a(href=publisher.website target="_blank") #{publisher.website}
