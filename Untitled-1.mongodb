@@ -12,7 +12,7 @@ use('Game');
 
 // Run a find command to view items sold on April 4th, 2014.
 const filter = {name:"Dead Rising® 2"}
-db.games.find(filter,{publisher:1}).populate("publisher")
+db.games.find(filter,{publisher:1})
 
 // Build an aggregation to view total sales for each product in 2014.
 const aggregation = [
