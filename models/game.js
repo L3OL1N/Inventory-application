@@ -15,8 +15,14 @@ const GameSchema = new Schema({
 // Virtual for game's URL
 GameSchema.virtual("url").get(function () {
     // We don't use an arrow function as we'll need the this object
-    return `/catalog/game/${this._id}`;
+    return `/game/${this._id}`;
   });
+// Virtual for game's date
+GameSchema.virtual("date_format").get(function () {
+  // We don't use an arrow function as we'll need the this object
+  return this.date_of_publish?
+  DateTime.fromJSDate(this.date_of_publish).toISODate():"";
+});
 
-  // Export model
+// Export model
 module.exports = mongoose.model("Game", GameSchema);

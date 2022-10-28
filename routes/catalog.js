@@ -13,6 +13,7 @@ router.get('/', function (req,res) {
 
 //Game 
 router.get('/games',game_controller.game_list);
+router.get('/game/:id',game_controller.game_detail);
 
 //Publisher
 router.get('/publishers',publisher_controller.publisher_list);

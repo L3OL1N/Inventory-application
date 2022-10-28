@@ -20,7 +20,7 @@ exports.publisher_list = function (req, res, next) {
 
 
 // Display detail page for a specific publisher.
-exports.Publisher_detail = (req, res, next) => {
+exports.publisher_detail = (req, res, next) => {
   res.send("Not publisher_detail page")
 };
 

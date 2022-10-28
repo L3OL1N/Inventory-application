@@ -4,6 +4,7 @@ block content
   h1= title
   ul
     for game in game_list
-      li=game.name + " : " 
+      li 
+        a(href= game.url) #{game.name} : 
         br
         |&nbsp&nbsp#{game.summary}

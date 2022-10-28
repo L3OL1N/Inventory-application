@@ -1,0 +1,17 @@
+extends layout
+
+block content
+  h1= title + game.name
+  ul
+    li Summary
+    |&nbsp&nbsp#{game.summary}
+    li Date of publish
+    |&nbsp&nbsp#{game.date_format}
+    li Publisher
+    |&nbsp&nbsp  #[a(href= game.publisher.url)=game.publisher.name]
+    li Genre
+    |&nbsp&nbsp
+    for i in game.genre
+        a(href= i.url)= i.name + ",  "
+    li Steam page
+    |&nbsp&nbsp#{game.steam_page}

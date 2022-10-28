@@ -47,7 +47,8 @@ function gameCreate(name, summary, date_of_publish, publisher, genre, steam_page
     summary: summary,
     date_of_publish: date_of_publish,
     publisher: publisher,
-    genre: genre
+    genre: genre,
+    steam_page: steam_page
   }
   if (genre != false) gamedetail.genre = genre
   
