@@ -13,6 +13,9 @@ router.get('/', function (req,res) {
 
 //Game 
 router.get('/games',game_controller.game_list);
+//Game create
+router.get('/game/create',game_controller.game_create_get);
+router.post('/game/create',game_controller.game_create_post);
 router.get('/game/:id',game_controller.game_detail);
 
 //Publisher
