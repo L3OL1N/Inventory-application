@@ -20,6 +20,10 @@ router.get('/game/:id',game_controller.game_detail);
 
 //Publisher
 router.get('/publishers',publisher_controller.publisher_list);
+//Publisher create
+router.get('/publisher/create',publisher_controller.publisher_create_get);
+router.post('/publisher/create',publisher_controller.publisher_create_post);
+
 router.get('/publisher/:id',publisher_controller.publisher_detail);
 
 //Genre

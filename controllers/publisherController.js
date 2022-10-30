@@ -57,15 +57,85 @@ exports.publisher_detail = (req, res, next) => {
 
 // Display publisher create form on GET.
 exports.publisher_create_get = (req, res, next) => {
-  res.send("Not publisher_create_get page")
+  // Get all , which we can use for adding to our publisher.
+  async.parallel(
+    {
+      
+    },
+    (err, results) => {
+      if (err) {
+        return next(err);
+      }
+      res.render("publisher_form", {
+        title: "Create Publisher",
+      });
+    }
+  );
 };
 
 
 // Handle publisher create on POST.
-exports.publisher_create_post = (req, res, next) => {
-  res.send("Not publisher_create_post page")
-};
+exports.publisher_create_post = [
 
+  // Validate and sanitize fields.
+  body("name", "Name must not be empty.")
+    .trim()
+    .isLength({ min: 1 })
+    .escape(),
+  body("founded", "Founded must not be empty")
+    .trim()
+    .optional({ checkFalsy: true })
+    .isISO8601()
+    .toDate(),
+  body("website", "Website must not be empty.")
+    .trim()
+    .isLength({ min: 1 })
+    .escape(),
+  // Process request after validation and sanitization.
+  (req, res, next) => {
+    // Extract the validation errors from a request.
+    const errors = validationResult(req);
+
+    // Create a Game object with escaped and trimmed data.
+    const publisher = new Publisher({
+      name: req.body.name,
+      founded: req.body.data,
+      website:req.body.website
+    });
+
+    if (!errors.isEmpty()) {
+      // There are errors. Render form again with sanitized values/error messages.
+
+      // Get all publishers and genres for form.
+      async.parallel(
+        {
+          
+        },
+        (err, results) => {
+          if (err) {
+            return next(err);
+          }
+
+          res.render("publisher_form", {
+            title: "Create Publisher",
+            publisher,
+            errors: errors.array(),
+          });
+        }
+      );
+      return;
+    }
+
+    // Data from form is valid. Save book.
+    publisher.save((err) => {
+      if (err) {
+        return next(err);
+      }
+      // Successful: redirect to new book record.
+      res.redirect(publisher.url);
+    });
+  },
+];
 
 // Display publisher delete form on GET.
 exports.publisher_delete_get = (req, res, next) => {

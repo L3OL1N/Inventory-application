@@ -1,0 +1,22 @@
+extends layout
+
+block content
+  h1= title
+
+  form(method='POST' action='')
+    div.form-group
+      label(for='name') Name:
+      input#name.form-control(type='text', placeholder='Name of game' name='name' required='true' value=(undefined===publisher ? '' : publisher.name) )
+    div.form-group
+      label(for='data') Founded:
+      input#data.form-control(type='date', placeholder='Founded' name='data' value=(undefined===publisher ? '' : publisher.founded) required='true')
+    div.form-group
+      label(for='website') Website:
+      input#website.form-control(type='text', placeholder='Website' name='website' required='true' value=(undefined===publisher ? '' : publisher.website) )
+    button.btn.btn-primary(type='submit') Submit
+
+  if errors
+    ul
+      for error in errors
+        li!= error.msg
+        
