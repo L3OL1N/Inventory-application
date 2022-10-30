@@ -21,5 +21,6 @@ router.get('/publisher/:id',publisher_controller.publisher_detail);
 
 //Genre
 router.get('/genres',genre_controller.genre_list);
+router.get('/genre/:id',genre_controller.genre_detail);
 
 module.exports = router;
