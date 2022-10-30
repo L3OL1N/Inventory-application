@@ -17,6 +17,7 @@ router.get('/game/:id',game_controller.game_detail);
 
 //Publisher
 router.get('/publishers',publisher_controller.publisher_list);
+router.get('/publisher/:id',publisher_controller.publisher_detail);
 
 //Genre
 router.get('/genres',genre_controller.genre_list);

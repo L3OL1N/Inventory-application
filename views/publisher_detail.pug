@@ -1,0 +1,13 @@
+extends layout
+
+block content
+  h1= title + " " + publisher.name
+  ul
+    li Founded
+    |&nbsp&nbsp#{publisher.founded_date_format}
+    li Website
+    |&nbsp&nbsp #[a(href=publisher.website target='_blank')= publisher.website]
+    li Games
+    |&nbsp&nbsp
+    for i in games
+        a(href= i.url)= i.name

@@ -27,9 +27,6 @@ exports.game_detail = (req, res, next) => {
         .populate("publisher genre")
         .exec(callback);
       },
-      // publisher_game(callback) {
-      //   Publisher.
-      // }
     },
     (err, results) => {
       if (err) {

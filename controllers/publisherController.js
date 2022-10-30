@@ -1,4 +1,5 @@
 const Publisher = require("../models/publisher");
+const Game = require("../models/game");
 const async = require("async");
 const { body, validationResult } = require("express-validator");
 
@@ -21,7 +22,36 @@ exports.publisher_list = function (req, res, next) {
 
 // Display detail page for a specific publisher.
 exports.publisher_detail = (req, res, next) => {
-  res.send("Not publisher_detail page")
+  async.parallel(
+    {
+      publisher(callback) {
+        Publisher.findById(req.params.id)
+        .exec(callback);
+      },
+      publisher_games(callback) {
+        Game.find({"publisher":req.params.id},"name")
+        .exec(callback);
+      }
+    },
+    (err, results) => {
+      if (err) {
+        return next(err);
+      }
+      if (results.publisher == null) {
+        // No results.
+        console.log(publisher)
+        const err = new Error("Publisher not found");
+        err.status = 404;
+        return next(err);
+      }
+      // Successful, so render
+      res.render("publisher_detail", {
+        title: "Publisher Detail",
+        publisher:results.publisher,
+        games: results.publisher_games,
+      });
+    }
+  );
 };
 
 
