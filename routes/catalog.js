@@ -11,14 +11,14 @@ router.get('/', function (req,res) {
     res.render('index',{ title:'Steam Wishlist'})
 });
 
-//Game 
+////Game                  ----------------------------------------------------
 router.get('/games',game_controller.game_list);
 //Game create
 router.get('/game/create',game_controller.game_create_get);
 router.post('/game/create',game_controller.game_create_post);
 router.get('/game/:id',game_controller.game_detail);
 
-//Publisher
+////Publisher             ----------------------------------------------------
 router.get('/publishers',publisher_controller.publisher_list);
 //Publisher create
 router.get('/publisher/create',publisher_controller.publisher_create_get);
@@ -26,8 +26,12 @@ router.post('/publisher/create',publisher_controller.publisher_create_post);
 
 router.get('/publisher/:id',publisher_controller.publisher_detail);
 
-//Genre
+////Genre               ----------------------------------------------------
 router.get('/genres',genre_controller.genre_list);
+//Genre create
+router.get('/genre/create',genre_controller.genre_create_get);
+router.post('/genre/create',genre_controller.genre_create_post);
+
 router.get('/genre/:id',genre_controller.genre_detail);
 
 module.exports = router;
