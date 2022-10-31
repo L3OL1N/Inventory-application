@@ -89,8 +89,9 @@ exports.publisher_create_post = [
     .toDate(),
   body("website", "Website must not be empty.")
     .trim()
-    .isLength({ min: 1 })
-    .escape(),
+    .isLength({ min: 1 }),
+  body("website", "Website must be an URL.")
+    .isURL({ protocols: ['http','https','ftp']}),
   // Process request after validation and sanitization.
   (req, res, next) => {
     // Extract the validation errors from a request.
@@ -151,10 +152,98 @@ exports.publisher_delete_post = (req, res, next) => {
 
 // Display publisher update form on GET.
 exports.publisher_update_get = (req, res, next) => {
-  res.send("Not publisher_update_get page")
+  // Get publisher for form.
+  async.parallel(
+    {
+      publisher(callback) {
+        Publisher.findById(req.params.id)
+        .exec(callback)
+      }
+    },
+    (err, results) => {
+      if (err) {
+        return next(err);
+      }
+      if (results.publisher == null) {
+        // No results.
+        const err = new Error("Game not found");
+        err.status = 404;
+        return next(err);
+      }
+      // Success.
+      res.render("publisher_form", {
+        title: "Update Publisher",
+        publisher: results.publisher,
+      });
+    }
+  );
 };
 
 // Handle publisher update on POST.
-exports.publisher_update_post = (req, res, next) => {
-  res.send("Not publisher_update_post page")
-};
+exports.publisher_update_post = [
+
+  // Validate and sanitize fields.
+  body("name", "Name must not be empty.")
+    .trim()
+    .isLength({ min: 1 })
+    .escape(),
+  body("founded", "Founded must not be empty")
+    .trim()
+    .optional({ checkFalsy: true })
+    .isISO8601()
+    .toDate(),
+  body("website", "Website must not be empty.")
+    .trim()
+    .isLength({ min: 1 }),
+  body("website", "Website must be an URL.")
+    .isURL({ protocols: ['http','https','ftp']}),
+  // Process request after validation and sanitization.
+  (req, res, next) => {
+    // Extract the validation errors from a request.
+    const errors = validationResult(req);
+
+    // Create a game object with escaped and trimmed data.
+    const publisher = new Publisher({ 
+      name: req.body.name,
+      founded: req.body.data,
+      website:req.body.website,
+      _id: req.params.id, //This is required, or a new ID will be assigned! 
+    });
+
+    if (!errors.isEmpty()) {
+      // There are errors. Render form again with sanitized values/error messages.
+
+      // Get Game for form.
+      async.parallel(
+        {
+          publisher(callback) {
+            Publisher.findById(req.params.id)
+            .exec(callback)
+          }
+        },
+        (err, results) => {
+          if (err) {
+            return next(err);
+          }
+
+          res.render("publisher_form", {
+            title: "Update Publisher",
+            publisher: results.publisher,
+            errors: errors.array(),
+          });
+        }
+      );
+      return;
+    }
+
+    // Data from form is valid. Update the record.
+    Publisher.findByIdAndUpdate(req.params.id, publisher, {}, (err, thepublisher) => {
+      if (err) {
+        return next(err);
+      }
+
+      // Successful: redirect to genre detail page.
+      res.redirect(thepublisher.url);
+    });
+  },
+];

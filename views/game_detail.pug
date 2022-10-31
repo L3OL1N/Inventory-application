@@ -14,4 +14,5 @@ block content
     for i in game.genre
         a(href= i.url)= i.name + ",  "
     li Steam page
-      p &nbsp&nbsp#{game.steam_page}
+      br
+      p &nbsp&nbsp #[a(href= game.steam_page target="_blank")= game.steam_page]

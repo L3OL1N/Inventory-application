@@ -9,7 +9,7 @@ block content
       input#name.form-control(type='text', placeholder='Name of game' name='name' required='true' value=(undefined===publisher ? '' : publisher.name) )
     div.form-group
       label(for='data') Founded:
-      input#data.form-control(type='date', placeholder='Founded' name='data' value=(undefined===publisher ? '' : publisher.founded) required='true')
+      input#data.form-control(type='date', placeholder='Founded' name='data' value=(undefined===publisher ? '' : publisher.founded_date_format) required='true')
     div.form-group
       label(for='website') Website:
       input#website.form-control(type='text', placeholder='Website' name='website' required='true' value=(undefined===publisher ? '' : publisher.website) )

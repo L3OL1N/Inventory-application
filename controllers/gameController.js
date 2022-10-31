@@ -5,7 +5,6 @@ const Genre = require('../models/genre');
 const { body, validationResult } = require("express-validator");
 
 var async = require('async');
-const publisher = require('../models/publisher');
 
 //Display list of all game
 exports.game_list = function(req, res, next) {
@@ -107,8 +106,10 @@ exports.game_create_post = [
   body("genre.*").escape(),
   body("steam", "Steam page must not be empty.")
     .trim()
-    .isLength({ min: 1 })
-    .escape(),
+    .isLength({ min: 1 }),
+  body("steam", "Must be steam page.")
+    .isURL({protocols: ['https']})
+    .matches('https://store.steampowered.com/app'),
   // Process request after validation and sanitization.
   (req, res, next) => {
     // Extract the validation errors from a request.
@@ -167,6 +168,135 @@ exports.game_create_post = [
       }
       // Successful: redirect to new book record.
       res.redirect(game.url);
+    });
+  },
+];
+
+// Display game update form on GET.
+exports.game_update_get = (req, res, next) => {
+  // Get game for form.
+  async.parallel(
+    {
+      game(callback) {
+        Game.findById(req.params.id)
+        .populate("publisher genre")
+        .exec(callback);
+      },
+      publishers(callback) {
+        Publisher.find(callback);
+      },
+      genres(callback) {
+        Genre.find(callback);
+      },
+    },
+    (err, results) => {
+      if (err) {
+        return next(err);
+      }
+      if (results.game == null) {
+        // No results.
+        const err = new Error("Game not found");
+        err.status = 404;
+        return next(err);
+      }
+      // Success.
+      res.render("game_form", {
+        title: "Update Game",
+        game: results.game,
+        publishers: results.publishers,
+        genres: results.genres,
+      });
+    }
+  );
+};
+
+// Handle game update on POST.
+exports.game_update_post = [
+
+  // Validate and sanitize fields.
+  body("name", "Name must not be empty.")
+    .trim()
+    .isLength({ min: 1 })
+    .escape(),
+  body("publisher", "publisher must not be empty.")
+    .trim()
+    .isLength({ min: 1 })
+    .escape(),
+  body("summary", "Summary must not be empty.")
+    .trim()
+    .isLength({ min: 1 })
+    .escape(),
+  body("date", "Date must not be empty")
+    .trim()
+    .optional({ checkFalsy: true })
+    .isISO8601()
+    .toDate(),
+  body("genre.*").escape(),
+  body("steam", "Steam page must not be empty.")
+    .trim()
+    .isLength({ min: 1 }),
+  body("steam", "Must be steam page.")
+    .isURL({protocols: ['https']})
+    .matches('https://store.steampowered.com/app'),
+  // Process request after validation and sanitization.
+  (req, res, next) => {
+    // Extract the validation errors from a request.
+    const errors = validationResult(req);
+
+    // Create a game object with escaped and trimmed data.
+    const game = new Game({ 
+      name: req.body.name,
+      summary: req.body.summary,
+      date_of_publish: req.body.data,
+      publisher: req.body.publisher,
+      genre: req.body.genre,
+      steam_page:req.body.steam,
+      _id: req.params.id, //This is required, or a new ID will be assigned! 
+    });
+
+    if (!errors.isEmpty()) {
+      // There are errors. Render form again with sanitized values/error messages.
+
+      // Get Game for form.
+      async.parallel(
+        {
+          game(callback) {
+            Game.findById(req.params.id)
+            .populate("publisher genre")
+            .exec(callback);
+          },
+          publishers(callback) {
+            Publisher.find(callback);
+          },
+          genres(callback) {
+            Genre.find(callback);
+          },
+        },
+        (err, results) => {
+          if (err) {
+            return next(err);
+          }
+
+          res.render("game_form", {
+            title: "Update Game",
+            game: results.game,
+            publishers: results.publishers,
+            genres: results.genres,
+            errors: errors.array(),
+          });
+        }
+      );
+      return;
+    }
+
+    // Data from form is valid. Update the record.
+    Game.findByIdAndUpdate(req.params.id, game, {}, (err, thegame) => {
+      if (err) {
+        return next(err);
+      }
+
+      // Successful: redirect to genre detail page.
+      res.redirect(thegame.url);
     });
   },
 ];
