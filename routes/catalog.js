@@ -19,6 +19,9 @@ router.post('/game/create',game_controller.game_create_post);
 //Game update
 router.get('/game/:id/update',game_controller.game_update_get);
 router.post('/game/:id/update',game_controller.game_update_post);
+//Game delete
+router.get('/game/:id/delete',game_controller.game_delete_get);
+router.post('/game/:id/delete',game_controller.game_delete_post);
 
 router.get('/game/:id',game_controller.game_detail);
 
@@ -30,6 +33,9 @@ router.post('/publisher/create',publisher_controller.publisher_create_post);
 //Publisher update
 router.get('/publisher/:id/update',publisher_controller.publisher_update_get);
 router.post('/publisher/:id/update',publisher_controller.publisher_update_post);
+//Publisher delete
+router.get('/publisher/:id/delete',publisher_controller.publisher_delete_get);
+router.post('/publisher/:id/delete',publisher_controller.publisher_delete_post);
 
 router.get('/publisher/:id',publisher_controller.publisher_detail);
 
@@ -41,6 +47,9 @@ router.post('/genre/create',genre_controller.genre_create_post);
 //Genre update
 router.get('/genre/:id/update',genre_controller.genre_update_get);
 router.post('/genre/:id/update',genre_controller.genre_update_post);
+//Genre delete
+router.get('/genre/:id/delete',genre_controller.genre_delete_get);
+router.post('/genre/:id/delete',genre_controller.genre_delete_post);
 
 router.get('/genre/:id',genre_controller.genre_detail);
 

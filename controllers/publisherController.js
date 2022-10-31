@@ -140,13 +140,70 @@ exports.publisher_create_post = [
 
 // Display publisher delete form on GET.
 exports.publisher_delete_get = (req, res, next) => {
-  res.send("Not publisher_delete_get page")
+  async.parallel(
+    {
+      publisher(callback) {
+        Publisher.findById(req.params.id).exec(callback);
+      },
+      publisher_games(callback) {
+        Game.find({"publisher":req.params.id},"name")
+        .exec(callback);
+      }
+    },
+    (err, results) => {
+      if (err) {
+        return next(err);
+      }
+      if (results.publisher == null) {
+        // No results.
+        res.redirect("/publishers");
+      }
+      // Successful, so render.
+      res.render("publisher_delete", {
+        title: "Delete Publisher",
+        publisher: results.publisher,
+        publisher_games: results.publisher_games
+      });
+    }
+  );
 };
-
 
 // Handle publisher delete on POST.
 exports.publisher_delete_post = (req, res, next) => {
-  res.send("Not publisher_delete_post page")
+  async.parallel(
+    {
+      publisher(callback) {
+        Publisher.findById(req.params.id).exec(callback);
+      },
+      publisher_games(callback) {
+        Game.find({"publisher":req.params.id},"name")
+        .exec(callback);
+      }
+    },
+    (err, results) => {
+      if (err) {
+        return next(err);
+      }
+      // Success
+      if (results.publisher_games.length > 0) {
+        // Publisher has games. Render in same way as for GET route.
+        res.render("publisher_delete", {
+          title: "Delete Publisher",
+          publisher: results.publisher,
+          publisher_games: results.publisher_games,
+        });
+        return;
+      }
+      // Publisher has no games. Delete object and redirect to the list of publishers.
+      Publisher.findByIdAndRemove(req.body.publisherid, (err) => {
+        if (err) {
+          return next(err);
+        }
+        // Success - go to publisher list
+        res.redirect("/publishers");
+      });
+    }
+  );
 };
 
 

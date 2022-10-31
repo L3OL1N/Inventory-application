@@ -300,3 +300,55 @@ exports.game_update_post = [
     });
   },
 ];
+
+// Display game delete form on GET.
+exports.game_delete_get = (req, res, next) => {
+  async.parallel(
+    {
+      game(callback) {
+        Game.findById(req.params.id).exec(callback);
+      },
+    },
+    (err, results) => {
+      if (err) {
+        return next(err);
+      }
+      if (results.game == null) {
+        // No results.
+        res.redirect("/games");
+      }
+      // Successful, so render.
+      res.render("game_delete", {
+        title: "Delete Game",
+        game: results.game,
+      });
+    }
+  );
+};
+
+
+// Handle game delete on POST.
+exports.game_delete_post = (req, res, next) => {
+  async.parallel(
+    {
+      game(callback) {
+        Game.findById(req.body.gameid).exec(callback);
+      },
+
+    },
+    (err, results) => {
+      if (err) {
+        return next(err);
+      }
+      
+      // Genre has no books. Delete object and redirect to the list of genres.
+      Game.findByIdAndRemove(req.body.gameid, (err) => {
+        if (err) {
+          return next(err);
+        }
+        // Success - go to genre list
+        res.redirect("/games");
+      });
+    }
+  );
+};

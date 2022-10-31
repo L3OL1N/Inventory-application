@@ -110,8 +110,8 @@ exports.genre_delete_get = (req, res, next) => {
       genre(callback) {
         Genre.findById(req.params.id).exec(callback);
       },
-      genres_books(callback) {
-        Book.find({ genre: req.params.id }).exec(callback);
+      genre_games(callback) {
+        Game.find({ genre: req.params.id }).exec(callback);
       },
     },
     (err, results) => {
@@ -120,13 +120,13 @@ exports.genre_delete_get = (req, res, next) => {
       }
       if (results.genre == null) {
         // No results.
-        res.redirect("/catalog/genres");
+        res.redirect("/genres");
       }
       // Successful, so render.
       res.render("genre_delete", {
         title: "Delete Genre",
         genre: results.genre,
-        genres_books: results.genres_books,
+        genre_games: results.genre_games,
       });
     }
   );
@@ -139,8 +139,8 @@ exports.genre_delete_post = (req, res, next) => {
       genre(callback) {
         Genre.findById(req.body.genreid).exec(callback);
       },
-      genres_books(callback) {
-        Book.find({ genre: req.body.genreid }).exec(callback);
+      genre_games(callback) {
+        Game.find({ genre: req.body.genreid }).exec(callback);
       },
     },
     (err, results) => {
@@ -148,22 +148,22 @@ exports.genre_delete_post = (req, res, next) => {
         return next(err);
       }
       // Success
-      if (results.genres_books.length > 0) {
-        // Genre has books. Render in same way as for GET route.
+      if (results.genre_games.length > 0) {
+        // Genre has games. Render in same way as for GET route.
         res.render("genre_delete", {
           title: "Delete Genre",
           genre: results.genre,
-          genre_books: results.genres_books,
+          genre_games: results.genre_games,
         });
         return;
       }
-      // Genre has no books. Delete object and redirect to the list of genres.
+      // Genre has no games. Delete object and redirect to the list of genres.
       Genre.findByIdAndRemove(req.body.genreid, (err) => {
         if (err) {
           return next(err);
         }
         // Success - go to genre list
-        res.redirect("/catalog/genres");
+        res.redirect("/genres");
       });
     }
   );
