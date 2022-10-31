@@ -1,10 +1,12 @@
 extends layout
 
 block content
-  h1= title + " " + genre.name
-  ul Games
+  h1= title + ": " + genre.name
+  ul #[h2  Games]
     for i in games
       li &nbsp&nbsp #[a(href= i.url)= i.name]
-    
+  br
+  p #[a(href=genre.url+'/update') Update] 
+  p #[a(href=genre.url+'/delete') Delete] 
         
         

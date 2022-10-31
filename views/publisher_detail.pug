@@ -1,13 +1,16 @@
 extends layout
 
 block content
-  h1= title + " " + publisher.name
+  h1= title + ": " + publisher.name
   ul
     li Founded
-     p &nbsp&nbsp#{publisher.founded_date_format}
+      p &nbsp&nbsp#{publisher.founded_date_format}
     li Website
-    |&nbsp&nbsp #[a(href=publisher.website target='_blank')= publisher.website]
+      p|&nbsp&nbsp #[a(href=publisher.website target='_blank')= publisher.website]
     li Games
       ul 
         for i in games
           li &nbsp&nbsp #[a(href= i.url)= i.name]
+  br
+  p #[a(href=publisher.url+'/update') Update] 
+  p #[a(href=publisher.url+'/delete') Delete] 

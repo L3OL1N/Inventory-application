@@ -1,7 +1,7 @@
 extends layout
 
 block content
-  h1= title + game.name
+  h1= title + ": " + game.name
   ul
     li Summary
       p &nbsp&nbsp#{game.summary}
@@ -10,9 +10,13 @@ block content
     li Publisher
       p &nbsp&nbsp  #[a(href= game.publisher.url)=game.publisher.name]
     li Genre
-    |&nbsp&nbsp
-    for i in game.genre
-        a(href= i.url)= i.name + ",  "
+      br
+      p
+        for i in game.genre
+          |&nbsp&nbsp #[a(href= i.url)= i.name + " , "]
     li Steam page
       br
       p &nbsp&nbsp #[a(href= game.steam_page target="_blank")= game.steam_page]
+  br
+  p #[a(href=game.url+'/update') Update] 
+  p #[a(href=game.url+'/delete') Delete] 
